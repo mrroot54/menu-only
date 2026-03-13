@@ -162,9 +162,12 @@
         <div class="max-w-3xl mx-auto px-5"><span>© 2026 Green Leaf Kitchen</span></div>
     </footer>
 
+   
+   
     <!-- JAVASCRIPT -->
-    <script>
-        const API_URL = "http://127.0.0.1:8000/api";
+        <script>
+        // FIX: Ab ye Railway ke URL (jaise https://abc.up.railway.app/api) use karega
+        const API_URL = window.location.origin + "/api";
 
         // DOM Elements
         const recommendedContainer = document.getElementById('recommendedContainer');
@@ -232,7 +235,7 @@
 
             } catch (error) {
                 console.error("Error:", error);
-                menuList.innerHTML = `<p class="text-center text-red-500 py-10">Failed to load menu.</p>`;
+                menuList.innerHTML = `<p class="text-center text-red-500 py-10">Failed to load menu. Check API URL or Network tab.</p>`;
             }
         }
 
@@ -449,5 +452,7 @@
             gsap.to(".fade-up", { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: "power2.out" });
         }
     </script>
+
+
 </body>
 </html>
