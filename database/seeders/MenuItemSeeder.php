@@ -1,3 +1,8 @@
+Yeh lijiye, aapka **Updated `MenuItemSeeder.php`** code.
+
+Maine `is_top_selling` ko sirf un 4 items ke liye `true` set kiya hai jo aapne bataye (**Veg Burger, Butter Chicken, Tandoori Chicken, Tandoori Roti**) aur baaki sab items me ise `false` kar diya hai.
+
+```php
 <?php
 
 namespace Database\Seeders;
@@ -34,15 +39,15 @@ class MenuItemSeeder extends Seeder
         };
 
         /* ---------- Starters ---------- */
-        // ID 1: Paneer Tikka (Special + Top Selling)
-        MenuItem::create(['category_id'=>$starters->id,'name'=>'Paneer Tikka','description'=>'Paneer cubes grilled','price'=>240, 'image'=>$getImage('Starters'), 'is_special'=>true, 'is_recommended'=>false, 'is_top_selling'=>true]);
+        // ID 1: Paneer Tikka (Special - Not Top Selling)
+        MenuItem::create(['category_id'=>$starters->id,'name'=>'Paneer Tikka','description'=>'Paneer cubes grilled','price'=>240, 'image'=>$getImage('Starters'), 'is_special'=>true, 'is_recommended'=>false, 'is_top_selling'=>false]);
         // ID 2: Chicken Tikka (Recommended)
         MenuItem::create(['category_id'=>$starters->id,'name'=>'Chicken Tikka','description'=>'Chicken grilled','price'=>260, 'image'=>$getImage('Starters'), 'is_special'=>false, 'is_recommended'=>true, 'is_top_selling'=>false]);
         // ID 3: Chilli Paneer
         MenuItem::create(['category_id'=>$starters->id,'name'=>'Chilli Paneer','description'=>'Spicy paneer','price'=>220, 'image'=>$getImage('Starters'), 'is_special'=>false, 'is_recommended'=>false, 'is_top_selling'=>false]);
         // ID 4: Veg Manchurian
         MenuItem::create(['category_id'=>$starters->id,'name'=>'Veg Manchurian','description'=>'Veg balls','price'=>200, 'image'=>$getImage('Starters'), 'is_special'=>false, 'is_recommended'=>false, 'is_top_selling'=>false]);
-        // ID 5: Tandoori Chicken (Top Selling)
+        // ID 5: Tandoori Chicken (Top Selling ✅)
         MenuItem::create(['category_id'=>$starters->id,'name'=>'Tandoori Chicken','description'=>'Clay oven chicken','price'=>320, 'image'=>$getImage('Starters'), 'is_special'=>false, 'is_recommended'=>false, 'is_top_selling'=>true]);
 
         /* ---------- Salads ---------- */
@@ -54,10 +59,10 @@ class MenuItemSeeder extends Seeder
         MenuItem::create(['category_id'=>$salads->id,'name'=>'Cucumber Salad','description'=>'Cucumber slices','price'=>75, 'image'=>$getImage('Salads')]);
 
         /* ---------- Fast Food ---------- */
-        // ID 11: Veg Burger (Special + Top Selling)
+        // ID 11: Veg Burger (Special + Top Selling ✅)
         MenuItem::create(['category_id'=>$fastFood->id,'name'=>'Veg Burger','description'=>'Veg patty burger','price'=>120, 'image'=>$getImage('Fast Food'), 'is_special'=>true, 'is_recommended'=>false, 'is_top_selling'=>true]);
-        // ID 12: Chicken Burger (Top Selling)
-        MenuItem::create(['category_id'=>$fastFood->id,'name'=>'Chicken Burger','description'=>'Chicken patty','price'=>150, 'image'=>$getImage('Fast Food'), 'is_special'=>false, 'is_recommended'=>false, 'is_top_selling'=>true]);
+        // ID 12: Chicken Burger (Removed from Top Selling)
+        MenuItem::create(['category_id'=>$fastFood->id,'name'=>'Chicken Burger','description'=>'Chicken patty','price'=>150, 'image'=>$getImage('Fast Food'), 'is_special'=>false, 'is_recommended'=>false, 'is_top_selling'=>false]);
         // ID 13: Paneer Sandwich (Recommended)
         MenuItem::create(['category_id'=>$fastFood->id,'name'=>'Paneer Sandwich','description'=>'Grilled sandwich','price'=>140, 'image'=>$getImage('Fast Food'), 'is_special'=>false, 'is_recommended'=>true, 'is_top_selling'=>false]);
         // ID 14-15: Normal
@@ -65,22 +70,22 @@ class MenuItemSeeder extends Seeder
         MenuItem::create(['category_id'=>$fastFood->id,'name'=>'Cheese Maggi','description'=>'Cheesy noodles','price'=>100, 'image'=>$getImage('Fast Food')]);
 
         /* ---------- Main Course ---------- */
-        // ID 16: Paneer Butter Masala (Top Selling)
-        MenuItem::create(['category_id'=>$mainCourse->id,'name'=>'Paneer Butter Masala','description'=>'Creamy paneer','price'=>300, 'image'=>$getImage('Main Course'), 'is_special'=>false, 'is_recommended'=>false, 'is_top_selling'=>true]);
+        // ID 16: Paneer Butter Masala (Removed from Top Selling)
+        MenuItem::create(['category_id'=>$mainCourse->id,'name'=>'Paneer Butter Masala','description'=>'Creamy paneer','price'=>300, 'image'=>$getImage('Main Course'), 'is_special'=>false, 'is_recommended'=>false, 'is_top_selling'=>false]);
         // ID 17: Shahi Paneer
         MenuItem::create(['category_id'=>$mainCourse->id,'name'=>'Shahi Paneer','description'=>'Rich curry','price'=>320, 'image'=>$getImage('Main Course')]);
         // ID 18: Dal Makhani (Recommended)
         MenuItem::create(['category_id'=>$mainCourse->id,'name'=>'Dal Makhani','description'=>'Slow cooked dal','price'=>260, 'image'=>$getImage('Main Course'), 'is_special'=>false, 'is_recommended'=>true, 'is_top_selling'=>false]);
-        // ID 19: Butter Chicken (Top Selling)
+        // ID 19: Butter Chicken (Top Selling ✅)
         MenuItem::create(['category_id'=>$mainCourse->id,'name'=>'Butter Chicken','description'=>'Buttery chicken','price'=>340, 'image'=>$getImage('Main Course'), 'is_special'=>false, 'is_recommended'=>false, 'is_top_selling'=>true]);
         // ID 20: Chicken Curry
         MenuItem::create(['category_id'=>$mainCourse->id,'name'=>'Chicken Curry','description'=>'Spicy chicken','price'=>330, 'image'=>$getImage('Main Course')]);
 
         /* ---------- Breads ---------- */
-        // ID 21: Tandoori Roti (Top Selling)
+        // ID 21: Tandoori Roti (Top Selling ✅)
         MenuItem::create(['category_id'=>$breads->id,'name'=>'Tandoori Roti','description'=>'Wheat roti','price'=>25, 'image'=>$getImage('Breads'), 'is_special'=>false, 'is_recommended'=>false, 'is_top_selling'=>true]);
-        // ID 22: Butter Naan (Top Selling + Recommended)
-        MenuItem::create(['category_id'=>$breads->id,'name'=>'Butter Naan','description'=>'Butter naan','price'=>40, 'image'=>$getImage('Breads'), 'is_special'=>false, 'is_recommended'=>true, 'is_top_selling'=>true]);
+        // ID 22: Butter Naan (Removed from Top Selling, Only Recommended)
+        MenuItem::create(['category_id'=>$breads->id,'name'=>'Butter Naan','description'=>'Butter naan','price'=>40, 'image'=>$getImage('Breads'), 'is_special'=>false, 'is_recommended'=>true, 'is_top_selling'=>false]);
         // ID 23-25: Normal
         MenuItem::create(['category_id'=>$breads->id,'name'=>'Garlic Naan','description'=>'Garlic naan','price'=>50, 'image'=>$getImage('Breads')]);
         MenuItem::create(['category_id'=>$breads->id,'name'=>'Lachha Paratha','description'=>'Layered paratha','price'=>45, 'image'=>$getImage('Breads')]);
@@ -97,7 +102,7 @@ class MenuItemSeeder extends Seeder
         MenuItem::create(['category_id'=>$rice->id,'name'=>'Mutton Biryani','description'=>'Mutton biryani','price'=>360, 'image'=>$getImage('Rice & Biryani')]);
 
         /* ---------- Drinks ---------- */
-        // ID 31-35: Sab Normal (Database ke hisaab se)
+        // ID 31-35: Sab Normal
         MenuItem::create(['category_id'=>$drinks->id,'name'=>'Sweet Lassi','description'=>'Yogurt drink','price'=>90, 'image'=>$getImage('Drinks')]);
         MenuItem::create(['category_id'=>$drinks->id,'name'=>'Salted Lassi','description'=>'Salty lassi','price'=>90, 'image'=>$getImage('Drinks')]);
         MenuItem::create(['category_id'=>$drinks->id,'name'=>'Cold Drink','description'=>'Soft drink','price'=>60, 'image'=>$getImage('Drinks')]);
@@ -116,3 +121,4 @@ class MenuItemSeeder extends Seeder
         MenuItem::create(['category_id'=>$desserts->id,'name'=>'Ice Cream','description'=>'Vanilla scoop','price'=>110, 'image'=>$getImage('Desserts')]);
     }
 }
+```
