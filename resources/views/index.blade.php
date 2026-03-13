@@ -62,16 +62,11 @@
         .special-card:hover img { transform: scale(1.1); }
         .special-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to right, rgba(0,0,0,0.7), transparent); display: flex; flex-direction: column; justify-content: center; padding: 20px; }
         
-        /* Top Selling Grid Style */
         .top-selling-card { background: white; border-radius: 12px; border: 1px solid #F1F5F9; overflow: hidden; transition: 0.3s; }
         .top-selling-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
 
-        /* Voice Search Animation */
         .voice-btn { transition: all 0.3s; }
-        .voice-btn.listening { 
-            color: #EF4444; 
-            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; 
-        }
+        .voice-btn.listening { color: #EF4444; animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
         @keyframes pulse-ring {
             0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
             100% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
@@ -111,13 +106,11 @@
 
     <!-- MAIN CONTENT -->
     <main class="max-w-3xl mx-auto px-5 pt-20">
-        <!-- HERO -->
         <section class="mb-6 fade-up">
             <h1 class="font-head text-3xl font-bold leading-tight mb-1 text-premium">Eat Fresh, Stay Healthy</h1>
             <p class="text-muted text-xs tracking-wide">Nutritious & Delicious food for you.</p>
         </section>
 
-        <!-- RESTAURANT INTRO -->
         <section class="mb-10 fade-up">
             <div class="bg-gradient-to-r from-brand-light to-white border border-brand/10 rounded-2xl p-5 flex items-center gap-4 shadow-sm">
                 <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm text-2xl">🌿</div>
@@ -128,13 +121,11 @@
             </div>
         </section>
 
-        <!-- 1. TODAY'S SPECIAL SECTION (is_special) -->
         <section class="mb-10" id="specialSection">
             <h2 class="text-xs font-semibold uppercase tracking-widest text-muted mb-4">Today’s Special ⭐</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="specialsContainer"></div>
         </section>
 
-        <!-- 2. RECOMMENDED SLIDER (is_recommended) -->
         <section class="mb-12" id="sliderSection">
             <h2 class="text-xs font-semibold uppercase tracking-widest text-muted mb-4">Recommended 🔥</h2>
             <div class="slider-container" id="topPicksWrapper">
@@ -148,24 +139,19 @@
             </div>
         </section>
 
-        <!-- 3. TOP SELLING GRID (is_top_selling) -->
         <section class="mb-12" id="topSellingSection">
             <h2 class="text-xs font-semibold uppercase tracking-widest text-muted mb-4">Top Selling 🏆</h2>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4" id="topSellingContainer"></div>
         </section>
 
-        <!-- CATEGORIES FILTER -->
         <section class="mb-6 fade-up" id="categorySection">
             <div class="flex gap-2 overflow-x-auto no-scrollbar -mx-5 px-5" id="categoryFilters"></div>
         </section>
 
-        <!-- MENU LIST -->
         <section id="menuList"><div class="text-center py-10 text-muted">Loading menu...</div></section>
 
-        <!-- PAGINATION -->
         <div id="paginationContainer" class="flex justify-center items-center gap-2 mt-8 mb-10"></div>
 
-        <!-- THANK YOU -->
         <section class="mb-10 fade-up">
              <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-light via-white to-brand-light p-6 border border-brand/10 text-center shadow-sm">
                 <div class="relative z-10">
@@ -176,7 +162,6 @@
         </section>
     </main>
 
-    <!-- FOOTER -->
     <footer class="text-center py-4 text-xs text-muted border-t border-gray-100 bg-white">
         <div class="max-w-3xl mx-auto px-5"><span>© 2026 Green Leaf Kitchen</span></div>
     </footer>
@@ -184,8 +169,19 @@
    
     <!-- JAVASCRIPT -->
     <script>
-        // FIX: Force HTTPS to avoid Mixed Content error on Railway
-        const API_URL = window.location.origin.replace('http://', 'https://') + "/api";
+        // ============================================================
+        // SMART URL LOGIC: Works on Both Local (HTTP) & Railway (HTTPS)
+        // ============================================================
+        
+        // window.location.origin khud se detect kar leta hai:
+        // Agar aap local par hain: 'http://127.0.0.1:8000' lega
+        // Agar aap railway par hain: 'https://menu-only...' lega
+        
+        const API_URL = window.location.origin + "/api";
+
+        // Debugging: Console check karein
+        console.log("Fetching API from:", API_URL); 
+
 
         // DOM Elements
         const recommendedContainer = document.getElementById('recommendedContainer');
@@ -236,8 +232,6 @@
                     img: item.image_url
                 }));
 
-                console.log(`Total Items: ${allMenuItems.length}`);
-
                 renderCategories();
                 renderSpecials(allMenuItems.filter(i => i.is_special));
                 renderRecommended(allMenuItems.filter(i => i.is_recommended));
@@ -275,7 +269,6 @@
             return btn;
         }
 
-        // 1. Today's Special Render
         function renderSpecials(items) {
             specialsContainer.innerHTML = '';
             if(items.length === 0) { document.getElementById('specialSection').style.display = 'none'; return; }
@@ -294,7 +287,6 @@
             });
         }
 
-        // 2. Recommended Render (Slider)
         function renderRecommended(items) {
             recommendedContainer.innerHTML = '';
             if(items.length === 0) { document.getElementById('sliderSection').style.display = 'none'; return; }
@@ -315,7 +307,6 @@
             initSlider();
         }
 
-        // 3. Top Selling Render (Grid)
         function renderTopSelling(items) {
             topSellingContainer.innerHTML = '';
             if(items.length === 0) { document.getElementById('topSellingSection').style.display = 'none'; return; }
@@ -417,7 +408,7 @@
                 recognition.onstart = () => {
                     voiceSearchBtn.classList.add('listening');
                     searchInput.placeholder = "Listening...";
-                    searchInput.value = ""; // Clear previous text
+                    searchInput.value = "";
                 };
 
                 recognition.onend = () => {
@@ -428,7 +419,6 @@
                 recognition.onresult = (event) => {
                     const transcript = event.results[0][0].transcript;
                     searchInput.value = transcript;
-                    // Trigger search
                     searchInput.dispatchEvent(new Event('input'));
                 };
 
@@ -442,7 +432,7 @@
                 });
 
             } else {
-                voiceSearchBtn.style.display = 'none'; // Hide if not supported
+                voiceSearchBtn.style.display = 'none';
                 console.warn("Voice Search not supported in this browser.");
             }
         }
