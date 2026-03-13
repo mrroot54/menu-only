@@ -1,8 +1,3 @@
-Yeh lijiye, aapka **Updated `MenuItemSeeder.php`** code.
-
-Maine `is_top_selling` ko sirf un 4 items ke liye `true` set kiya hai jo aapne bataye (**Veg Burger, Butter Chicken, Tandoori Chicken, Tandoori Roti**) aur baaki sab items me ise `false` kar diya hai.
-
-```php
 <?php
 
 namespace Database\Seeders;

@@ -65,6 +65,17 @@
         /* Top Selling Grid Style */
         .top-selling-card { background: white; border-radius: 12px; border: 1px solid #F1F5F9; overflow: hidden; transition: 0.3s; }
         .top-selling-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+
+        /* Voice Search Animation */
+        .voice-btn { transition: all 0.3s; }
+        .voice-btn.listening { 
+            color: #EF4444; 
+            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; 
+        }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            100% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        }
     </style>
 </head>
 <body class="text-premium pb-20">
@@ -84,7 +95,16 @@
         <div class="max-w-3xl mx-auto px-5 py-3">
             <div class="flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-4 py-3 shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                
                 <input type="text" id="searchInput" placeholder="Search food..." class="w-full bg-transparent outline-none text-sm text-premium font-medium">
+                
+                <!-- VOICE SEARCH BUTTON -->
+                <button id="voiceSearchBtn" class="voice-btn p-2 rounded-full hover:bg-gray-100 text-muted hover:text-brand-dark">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
+                </button>
+
                 <button id="closeSearchBtn" class="text-xs text-brand font-bold px-3 py-1 hover:bg-brand/10 rounded-full">Close</button>
             </div>
         </div>
@@ -163,10 +183,8 @@
     </footer>
 
    
-   
     <!-- JAVASCRIPT -->
-        <script>
-        // FIX: Ab ye Railway ke URL (jaise https://abc.up.railway.app/api) use karega
+    <script>
         const API_URL = window.location.origin + "/api";
 
         // DOM Elements
@@ -183,6 +201,7 @@
         const closeSearchBtn = document.getElementById('closeSearchBtn');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const voiceSearchBtn = document.getElementById('voiceSearchBtn'); // New Element
 
         // State
         let allMenuItems = [];
@@ -197,6 +216,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             initApp();
             initEvents();
+            initVoiceSearch(); // Initialize Voice Search
         });
 
         async function initApp() {
@@ -216,21 +236,11 @@
                     img: item.image_url
                 }));
 
-                console.log(`Total Items: ${allMenuItems.length}`);
-
                 renderCategories();
-                
-                // 1. Today's Special (is_special = true)
                 renderSpecials(allMenuItems.filter(i => i.is_special));
-                
-                // 2. Recommended (is_recommended = true)
                 renderRecommended(allMenuItems.filter(i => i.is_recommended));
-                
-                // 3. Top Selling (is_top_selling = true)
                 renderTopSelling(allMenuItems.filter(i => i.is_top_selling));
-
                 applyFilter('all');
-                
                 initSectionAnimations();
 
             } catch (error) {
@@ -263,7 +273,6 @@
             return btn;
         }
 
-        // 1. Today's Special Render
         function renderSpecials(items) {
             specialsContainer.innerHTML = '';
             if(items.length === 0) { document.getElementById('specialSection').style.display = 'none'; return; }
@@ -282,7 +291,6 @@
             });
         }
 
-        // 2. Recommended Render (Slider)
         function renderRecommended(items) {
             recommendedContainer.innerHTML = '';
             if(items.length === 0) { document.getElementById('sliderSection').style.display = 'none'; return; }
@@ -300,10 +308,9 @@
                     </div>`;
                 recommendedContainer.appendChild(card);
             });
-            initSlider(); // Re-init slider
+            initSlider();
         }
 
-        // 3. Top Selling Render (Grid)
         function renderTopSelling(items) {
             topSellingContainer.innerHTML = '';
             if(items.length === 0) { document.getElementById('topSellingSection').style.display = 'none'; return; }
@@ -393,6 +400,49 @@
             }
         }
 
+        // --- Voice Search Logic ---
+        function initVoiceSearch() {
+            // Check if Browser supports Speech Recognition
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+            if (SpeechRecognition) {
+                const recognition = new SpeechRecognition();
+                recognition.continuous = false; // Stop after one sentence
+                recognition.lang = 'en-US'; // Set Language (Can be 'hi-IN' for Hindi)
+
+                recognition.onstart = () => {
+                    voiceSearchBtn.classList.add('listening'); // Add visual feedback
+                    searchInput.placeholder = "Listening...";
+                };
+
+                recognition.onend = () => {
+                    voiceSearchBtn.classList.remove('listening');
+                    searchInput.placeholder = "Search food...";
+                };
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    searchInput.value = transcript;
+                    // Trigger the existing search logic
+                    searchInput.dispatchEvent(new Event('input'));
+                };
+
+                recognition.onerror = (event) => {
+                    console.error("Speech Recognition Error:", event.error);
+                    voiceSearchBtn.classList.remove('listening');
+                };
+
+                voiceSearchBtn.addEventListener('click', () => {
+                    recognition.start();
+                });
+
+            } else {
+                // Hide button if browser not supported
+                voiceSearchBtn.style.display = 'none';
+                console.warn("Browser does not support Voice Search");
+            }
+        }
+
         // --- Events & Slider Logic ---
         function initEvents() {
             nextBtn.addEventListener('click', slideNext);
@@ -452,7 +502,5 @@
             gsap.to(".fade-up", { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: "power2.out" });
         }
     </script>
-
-
 </body>
 </html>
