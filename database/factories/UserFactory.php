@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Faker\Generator as FakerGenerator; // Import this
 
 class UserFactory extends Factory
 {
@@ -12,9 +13,12 @@ class UserFactory extends Factory
 
     public function definition(): array
     {
+        // Check if faker is available, otherwise create new
+        $faker = $this->faker ?? \Faker\Factory::create();
+
         return [
-            'name' => $this->faker->name(), // Changed fake() to $this->faker
-            'email' => $this->faker->unique()->safeEmail(), // Changed fake() to $this->faker
+            'name' => $faker->name(),
+            'email' => $faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
