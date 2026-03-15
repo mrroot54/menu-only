@@ -13,8 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   
   <!-- Styles -->
-  <link rel="stylesheet" href="{{ asset('dashboard/css/styles.css') }}">
-  
+<link rel="stylesheet" href="/dashboard/css/styles.css">  
   <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
@@ -88,7 +87,6 @@
   <div class="toast-container"></div>
 
   <!-- Main JS -->
-  <script src="{{ asset('dashboard/js/app.js') }}"></script>
-  @stack('scripts')
+<script src="/dashboard/js/app.js"></script>  @stack('scripts')
 </body>
 </html>
