@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-// Yahan Admin folder ka Controller import kar rahe hain
+// Controllers Import
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\MenuItemController; // New Import
 
 /*
 |--------------------------------------------------------------------------
@@ -43,9 +45,27 @@ Route::middleware(['auth'])->group(function () {
     // Admin Dashboard Home
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-    // Admin Categories List Page
-    Route::get('/admin/categories', [AdminController::class, 'categories'])->name('admin.categories.index');
+    // -----------------------------------------------------
+    // CATEGORIES MANAGEMENT (Resource Controller)
+    // -----------------------------------------------------
+    Route::resource('admin/categories', CategoryController::class)->names([
+        'index'   => 'admin.categories.index',
+        'create'  => 'admin.categories.create',
+        'store'   => 'admin.categories.store',
+        'edit'    => 'admin.categories.edit',
+        'update'  => 'admin.categories.update',
+        'destroy' => 'admin.categories.destroy'
+    ]);
 
-    // Admin Menu Items List Page
-    Route::get('/admin/menu-items', [AdminController::class, 'menuItems'])->name('admin.menu-items.index');
+    // -----------------------------------------------------
+    // MENU ITEMS MANAGEMENT (Resource Controller)
+    // -----------------------------------------------------
+    Route::resource('admin/menu-items', MenuItemController::class)->names([
+        'index'   => 'admin.menu-items.index',
+        'create'  => 'admin.menu-items.create',
+        'store'   => 'admin.menu-items.store',
+        'edit'    => 'admin.menu-items.edit',
+        'update'  => 'admin.menu-items.update',
+        'destroy' => 'admin.menu-items.destroy'
+    ]);
 });

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
 use App\Models\MenuItem;
+use App\Models\User; // User Model Import
 
 class AdminController extends Controller
 {
@@ -15,7 +16,6 @@ class AdminController extends Controller
      */
     public function showLogin()
     {
-        // Agar user pehle se logged in hai, toh use dashboard pe bhej do
         if (Auth::check()) {
             return redirect()->route('admin.dashboard');
         }
@@ -32,15 +32,11 @@ class AdminController extends Controller
             'password' => 'required',
         ]);
 
-        // Attempt to log the user in
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
-            // Login successful, redirect to dashboard
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        // Login failed, redirect back with error
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
@@ -54,7 +50,6 @@ class AdminController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
         return redirect()->route('admin.login');
     }
 
@@ -63,21 +58,31 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        // Database se Real Data fetch kar rahe hain
+        // 1. Menu Items Count
         $totalItems = MenuItem::count();
+        
+        // 2. Categories Count
         $totalCategories = Category::count();
+        
+        // 3. Specials Count
         $totalSpecials = MenuItem::where('is_special', true)->count();
+        
+        // 4. Users Count
+        $totalUsers = User::count();
+
+        // Highlights
         $topSelling = MenuItem::where('is_top_selling', true)->count();
         $recommended = MenuItem::where('is_recommended', true)->count();
         
-        // Recent 3 items le rahe hain
+        // Recent Items (Abhi ke liye rakha hua, view mein use nahi ho raha)
         $recentItems = MenuItem::latest()->take(3)->get();
 
-        // Data ko view mein bhej rahe hain
+        // All Data passing to view
         return view('admin.dashboard', compact(
             'totalItems', 
             'totalCategories', 
-            'totalSpecials', 
+            'totalSpecials',
+            'totalUsers',
             'topSelling', 
             'recommended', 
             'recentItems'
@@ -89,12 +94,31 @@ class AdminController extends Controller
      */
     public function categories()
     {
-        // Categories ko unke items count ke saath fetch karein
         $categories = Category::withCount('menuItems')
                         ->orderBy('order', 'ASC')
                         ->get();
-
         return view('admin.categories.index', compact('categories'));
+    }
+
+    /**
+     * Delete a specific category.
+     */
+    public function destroyCategory($id)
+    {
+        $category = Category::find($id);
+
+        if (!$category) {
+            return back()->with('error', 'Category not found.');
+        }
+
+        // Check: Agar category mein items hain toh delete nahi kar sakte
+        if ($category->menuItems()->count() > 0) {
+            return back()->with('error', 'Cannot delete category. It has menu items inside.');
+        }
+
+        $category->delete();
+
+        return back()->with('success', 'Category deleted successfully.');
     }
 
     /**
@@ -102,11 +126,7 @@ class AdminController extends Controller
      */
     public function menuItems()
     {
-        // Menu items with category data
-        $items = MenuItem::with('category')
-                    ->latest()
-                    ->get();
-
+        $items = MenuItem::with('category')->latest()->get();
         return view('admin.menu-items.index', compact('items'));
     }
 }

@@ -13,9 +13,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   
   <!-- Styles -->
-<link rel="stylesheet" href="/dashboard/css/styles.css">  
+  <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+  
   <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- FIX: Force White Background -->
+  <style>
+    body {
+        background-color: #FFFFFF !important; /* White background */
+        color: #1F2937 !important; /* Dark text */
+    }
+    .container.page {
+        background-color: #FFFFFF !important;
+        padding-bottom: 100px !important;
+    }
+    /* Basic visibility for forms */
+    .card { background: #fff; }
+    .form-input { border: 1px solid #D1D5DB; background: #fff; color: #000; }
+  </style>
 </head>
 <body>
   
@@ -23,15 +39,16 @@
   @section('header')
   <header class="header">
     <div class="header-content">
-      <div class="header-info">
-        <div class="brand-title">Green Leaf Kitchen</div>
-        <p class="header-subtitle">Admin Dashboard</p>
-      </div>
-      <div class="profile-avatar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
+      <div class="header-left">
+        <a href="{{ route('admin.dashboard') }}" class="back-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </a>
+        <div>
+          <div class="brand-title">Green Leaf Kitchen</div>
+          <p class="header-subtitle">Admin Dashboard</p>
+        </div>
       </div>
     </div>
   </header>
@@ -87,6 +104,7 @@
   <div class="toast-container"></div>
 
   <!-- Main JS -->
-<script src="/dashboard/js/app.js"></script>  @stack('scripts')
+  <script src="{{ asset('js/app.js') }}"></script>
+  @stack('scripts')
 </body>
 </html>
