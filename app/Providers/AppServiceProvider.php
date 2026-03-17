@@ -4,8 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
-// Ye line import karein
-use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\URL; // Ye line zaroori hai
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,11 +21,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // --- YE LINE ADD KAREIN (HTTPS Force) ---
-        if (env('APP_ENV') !== 'local') {
-            URL::forceScheme('https');
-        }
-        // ----------------------------------------
+        // --- YE LINES ADD KAREIN (START) ---
+        
+        // Force HTTPS for all generated links
+        URL::forceScheme('https');
+        
+        // Force the root URL (Ye Railway par CSS fix karega)
+        URL::forceRootUrl(config('app.url'));
+        
+        // --- YE LINES ADD KAREIN (END) ---
 
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
             return config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
