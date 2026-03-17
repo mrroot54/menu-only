@@ -1,10 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Create Menu Item')
+@section('title', 'New Menu Item')
 
 @section('nav-menu', 'active')
 
 @section('header')
+  <!-- Custom Header for Create Page -->
   <header class="header">
     <div class="header-content">
       <div class="header-left">
@@ -24,10 +25,11 @@
 
 @section('content')
   <main class="container page">
+    <!-- Form Start -->
     <form action="{{ route('admin.menu-items.store') }}" method="POST" enctype="multipart/form-data">
       @csrf
 
-      <!-- Image Upload -->
+      <!-- Image Upload Card -->
       <div class="card mb-4">
         <div class="card-body">
           <label class="form-label">Item Image</label>
@@ -43,7 +45,7 @@
         </div>
       </div>
 
-      <!-- Basic Info -->
+      <!-- Basic Information Card -->
       <div class="card mb-4">
         <div class="card-header">
           <h3 class="card-title">Basic Information</h3>
@@ -51,22 +53,44 @@
         <div class="card-body">
           <div class="form-group">
             <label class="form-label" for="name">Item Name *</label>
-            <input type="text" id="name" name="name" class="form-input" placeholder="e.g., Garden Fresh Salad" value="{{ old('name') }}" required>
-            @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+            <input 
+              type="text" 
+              id="name" 
+              name="name" 
+              class="form-input" 
+              placeholder="e.g., Garden Fresh Salad"
+              value="{{ old('name') }}"
+              required
+            >
           </div>
           
           <div class="form-group">
             <label class="form-label" for="description">Description</label>
-            <textarea id="description" name="description" class="form-input form-textarea" placeholder="Describe this menu item..." rows="3">{{ old('description') }}</textarea>
+            <textarea 
+              id="description" 
+              name="description" 
+              class="form-input form-textarea" 
+              placeholder="Describe this menu item..."
+              rows="3"
+            >{{ old('description') }}</textarea>
           </div>
           
           <div class="form-group">
             <label class="form-label" for="price">Price (₹) *</label>
             <div class="price-input-wrapper">
               <span class="currency">₹</span>
-              <input type="number" id="price" name="price" class="form-input" placeholder="0.00" step="0.01" min="0" value="{{ old('price') }}" required>
+              <input 
+                type="number" 
+                id="price" 
+                name="price" 
+                class="form-input" 
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                value="{{ old('price') }}"
+                required
+              >
             </div>
-            @error('price') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
           </div>
           
           <div class="form-group">
@@ -74,15 +98,16 @@
             <select id="category_id" name="category_id" class="form-input form-select" required>
               <option value="">Select a category</option>
               @foreach($categories as $cat)
-                <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>
+                  {{ $cat->name }}
+                </option>
               @endforeach
             </select>
-            @error('category_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
           </div>
         </div>
       </div>
 
-      <!-- Flags (Highlights) -->
+      <!-- Menu Highlights (Flags) Card -->
       <div class="card mb-4">
         <div class="card-header">
           <h3 class="card-title">Menu Highlights</h3>
@@ -97,8 +122,9 @@
                 <div class="font-medium">Top Selling</div>
                 <div class="text-muted" style="font-size: 0.8125rem;">Show as a popular item</div>
               </div>
+              <!-- Laravel Friendly Switch -->
               <label class="switch">
-                <input type="checkbox" name="is_top_selling" {{ old('is_top_selling') ? 'checked' : '' }}>
+                <input type="checkbox" name="is_top_selling" value="1" {{ old('is_top_selling') ? 'checked' : '' }}>
                 <div class="switch-thumb"></div>
               </label>
             </div>
@@ -110,7 +136,7 @@
                 <div class="text-muted" style="font-size: 0.8125rem;">Today's special or limited offer</div>
               </div>
               <label class="switch">
-                <input type="checkbox" name="is_special" {{ old('is_special') ? 'checked' : '' }}>
+                <input type="checkbox" name="is_special" value="1" {{ old('is_special') ? 'checked' : '' }}>
                 <div class="switch-thumb"></div>
               </label>
             </div>
@@ -122,7 +148,7 @@
                 <div class="text-muted" style="font-size: 0.8125rem;">Chef's recommendation</div>
               </div>
               <label class="switch">
-                <input type="checkbox" name="is_recommended" {{ old('is_recommended') ? 'checked' : '' }}>
+                <input type="checkbox" name="is_recommended" value="1" {{ old('is_recommended') ? 'checked' : '' }}>
                 <div class="switch-thumb"></div>
               </label>
             </div>
@@ -131,6 +157,7 @@
         </div>
       </div>
 
+      <!-- Submit Button -->
       <button type="submit" class="btn btn-primary btn-full btn-lg">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 5v14M5 12h14"/>
@@ -140,3 +167,20 @@
     </form>
   </main>
 @endsection
+
+@push('scripts')
+<script>
+    // Small script to handle switch toggle visually (if not handled by CSS)
+    document.querySelectorAll('.switch input').forEach(input => {
+        input.addEventListener('change', function() {
+            if(this.checked) {
+                this.parentElement.classList.add('active');
+            } else {
+                this.parentElement.classList.remove('active');
+            }
+        });
+        // Initial state check
+        if(input.checked) input.parentElement.classList.add('active');
+    });
+</script>
+@endpush

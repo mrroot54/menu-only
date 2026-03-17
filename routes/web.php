@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 // Controllers Import
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\MenuItemController; // New Import
+use App\Http\Controllers\Admin\MenuItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +16,6 @@ use App\Http\Controllers\Admin\MenuItemController; // New Import
 // 1. CUSTOMER FRONTEND (Public)
 // ============================================================
 
-// Ye route 'index.blade.php' file ko load karega (Customer Menu Page)
 Route::get('/', function () {
     return view('index');
 })->name('customer.menu');
@@ -26,28 +25,21 @@ Route::get('/', function () {
 // 2. ADMIN AUTHENTICATION (Login/Logout)
 // ============================================================
 
-// Admin Login Page Show
 Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.login');
-
-// Admin Login Form Submit
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
 
 
 // ============================================================
-// 3. ADMIN PROTECTED ROUTES (Middleware Auth)
+// 3. ADMIN PROTECTED ROUTES
 // ============================================================
 
-Route::middleware(['auth'])->group(function () {
-    
-    // Admin Logout
-    Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+// Note: 'auth' middleware temporarily commented out for development
+// Route::middleware(['auth'])->group(function () {
 
-    // Admin Dashboard Home
+    Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-    // -----------------------------------------------------
-    // CATEGORIES MANAGEMENT (Resource Controller)
-    // -----------------------------------------------------
+    // Categories Management
     Route::resource('admin/categories', CategoryController::class)->names([
         'index'   => 'admin.categories.index',
         'create'  => 'admin.categories.create',
@@ -57,9 +49,7 @@ Route::middleware(['auth'])->group(function () {
         'destroy' => 'admin.categories.destroy'
     ]);
 
-    // -----------------------------------------------------
-    // MENU ITEMS MANAGEMENT (Resource Controller)
-    // -----------------------------------------------------
+    // Menu Items Management
     Route::resource('admin/menu-items', MenuItemController::class)->names([
         'index'   => 'admin.menu-items.index',
         'create'  => 'admin.menu-items.create',
@@ -68,4 +58,5 @@ Route::middleware(['auth'])->group(function () {
         'update'  => 'admin.menu-items.update',
         'destroy' => 'admin.menu-items.destroy'
     ]);
-});
+
+// }); 
