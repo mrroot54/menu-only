@@ -4,30 +4,24 @@ namespace App\Providers;
 
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\URL;
+// use Illuminate\Support\Facades\URL; // Hata diya
 
 class AppServiceProvider extends ServiceProvider
 {
+    /**
+     * Register any application services.
+     */
     public function register(): void
     {
         //
     }
 
+    /**
+     * Bootstrap any application services.
+     */
     public function boot(): void
     {
-        // Safe method to force HTTPS and URL
-        try {
-            // Force Scheme
-            URL::forceScheme('https');
-            
-            // Force Root URL (Only if APP_URL is set)
-            if (config('app.url')) {
-                URL::forceRootUrl(config('app.url'));
-            }
-        } catch (\Exception $e) {
-            // Do nothing if error, let site run
-        }
-
+        // Reset Password Logic (Ye theek se chal raha tha)
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
             return config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
         });
