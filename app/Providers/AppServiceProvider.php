@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
-// use Illuminate\Support\Facades\URL; // Hata diya
+use Illuminate\Support\Facades\URL; // Import URL
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,7 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Reset Password Logic (Ye theek se chal raha tha)
+        // Agar Localhost nahi hai (matlab live server hai), tab hi HTTPS force karo
+        if (env('APP_ENV') !== 'local') {
+            URL::forceScheme('https');
+        }
+
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
             return config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
         });
